@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import UsersRepository from '../repositories/UsersRepository.js';
+import usersRepository from '../repositories/usersRepository.js';
 
-const verifyToken = async (req, res, next) => {
+const verifyTokenMiddleware = async (req, res, next) => {
     const { authorization } = req.headers;
 
     if (!authorization) {
@@ -18,11 +18,11 @@ const verifyToken = async (req, res, next) => {
         });
     }
 
-    const token = authorization.slice(' ')[1];
+    const token = authorization.split(' ')[1];
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await UsersRepository.getUserById(decoded.userId);
+        const user = await usersRepository.getUserById(decoded.userId);
 
         if (!user) {
             return res.status(401).json({
@@ -39,4 +39,4 @@ const verifyToken = async (req, res, next) => {
     }
 };
 
-export default verifyToken;
+export default verifyTokenMiddleware;
