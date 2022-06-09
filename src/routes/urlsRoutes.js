@@ -12,8 +12,10 @@ urlsRouter.post(
     schemaValidationMiddleware(urlSchema),
     urlsController.createUrl
 );
+
+urlsRouter.get('/urls/:id', urlsController.getUrlById);
 // urlsRouter.get('/open/:shortUrl', UrlsController.redirectUrl);
-// urlsRouter.get('/:id', UrlsController.getUrlById);
+
 // urlsRouter.delete('/:id', verifyToken, UrlsController.deleteUrl);
 
 export default urlsRouter;

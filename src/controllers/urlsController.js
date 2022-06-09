@@ -20,4 +20,24 @@ export default class urlsController {
             res.status(500).json({ error: error.message });
         }
     };
+
+    static getUrlById = async (req, res) => {
+        const { id } = req.params;
+
+        try {
+            const url = await urlsRepository.getUrlById(id);
+
+            if (!url) {
+                return res.status(404).json({ error: 'URL not found' });
+            }
+
+            res.status(200).json({
+                id: url.id,
+                shortUrl: url.shortUrl,
+                url: url.url,
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    };
 }
