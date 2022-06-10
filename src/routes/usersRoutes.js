@@ -4,7 +4,6 @@ import verifyTokenMiddleware from '../middlewares/verifyTokenMiddleware.js';
 
 const usersRouter = Router();
 
-usersRouter.get('/', verifyTokenMiddleware, usersController.getUserById);
 usersRouter.get(
     '/users/:id',
     verifyTokenMiddleware,
