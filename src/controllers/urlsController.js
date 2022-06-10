@@ -40,4 +40,22 @@ export default class urlsController {
             res.status(500).json({ error: error.message });
         }
     };
+
+    static redirectUrl = async (req, res) => {
+        const { shortUrl } = req.params;
+
+        try {
+            const url = await urlsRepository.redirectUrl(shortUrl);
+
+            if (!url) {
+                return res.status(404).json({ error: 'URL not found' });
+            }
+
+            await urlsRepository.increaseVisitCount(shortUrl);
+
+            res.redirect(url.url);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    };
 }
