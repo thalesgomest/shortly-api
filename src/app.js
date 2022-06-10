@@ -2,10 +2,9 @@ import express, { json } from 'express';
 import cors from 'cors';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
-import db from './config/database.js';
 import authRouter from './routes/authRoutes.js';
 import urlsRouter from './routes/urlsRoutes.js';
-import { nanoid } from 'nanoid';
+import usersRouter from './routes/usersRoutes.js';
 
 const app = express();
 app.use(cors());
@@ -14,6 +13,7 @@ dotenv.config();
 
 app.use(authRouter);
 app.use(urlsRouter);
+app.use(usersRouter);
 
 app.listen(process.env.PORT, () => {
     console.log(

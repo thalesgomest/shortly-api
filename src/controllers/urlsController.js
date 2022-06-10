@@ -58,4 +58,32 @@ export default class urlsController {
             res.status(500).json({ error: error.message });
         }
     };
+
+    static deleteUrl = async (req, res) => {
+        const { id } = req.params;
+
+        const { user } = res.locals;
+
+        try {
+            const url = await urlsRepository.getUrlById(id);
+
+            if (!url) {
+                return res.status(404).json({ error: 'URL not found' });
+            }
+
+            if (url.userId !== user.id) {
+                return res
+                    .status(401)
+                    .json({ error: 'User not authorized to delete' });
+            }
+
+            await urlsRepository.deleteUrl(id);
+
+            res.status(204).json({
+                message: 'URL deleted successfully',
+            });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    };
 }

@@ -32,19 +32,19 @@ export default class UsersRepository {
 
     static getUserByIdWithUrlsRelationship = async (id) => {
         const query = sqlstring.format(
-            `SELECT * FROM users WHERE id = ?',
-        users.name,
-        SUM(urls."visitCount") AS "visitCount",
-        json_agg(json_build_object(
-            "id", urls.id,
-            "url", urls.url,
-            "title", urls.title,
-            "visitCount", urls."visitCount"
-        )) AS "shortnedUrls"
-        FROM users
-        LEFT JOIN urls ON urls.userId = users.id
-        WHERE users.id = ?
-        GROUP BY users.id, users.name`,
+            `SELECT users.id,
+            users.name,
+            SUM(urls."visitCount") AS "visitCount",
+            json_agg(json_build_object(
+                'id', urls.id,
+                'url', urls.url,
+                'shortUrl', urls."shortUrl",
+                'visitCount', urls."visitCount"
+            )) AS "shortenedUrls"
+            FROM users 
+            LEFT JOIN urls ON urls."userId" = users.id
+            WHERE users.id = ? 
+            GROUP BY users.id, users.name`,
             [id]
         );
 
@@ -59,7 +59,7 @@ export default class UsersRepository {
             COUNT(urls.id) AS "linksCount",
             COALESCE(SUM(urls."visitCount"), 0) AS "visitCount"
             FROM users
-            LEFT JOIN urls ON urls.userId = users.id
+            LEFT JOIN urls ON urls."userId" = users.id
             GROUP BY users.id, users.name
             ORDER BY "visitCount" DESC, "linksCount" DESC
             LIMIT 10`
